@@ -4,12 +4,12 @@ LOGS="$DIR/logs"
 GUNICORN="$DIR/venv/bin/gunicorn"
 mkdir -p "$LOGS"
 
-chown -R dckakadia:dckakadia /home/dckakadia/import-tools-portal/data/
-chmod -R 775 /home/dckakadia/import-tools-portal/data/
+chown -R dckakadia:dckakadia /home/dckakadia/business_tools/data/
+chmod -R 775 /home/dckakadia/business_tools/data/
 echo "=============================================="
 echo "  Import Tools Portal — Starting Services"
-chown -R dckakadia:dckakadia /home/dckakadia/import-tools-portal/data/
-chmod -R 775 /home/dckakadia/import-tools-portal/data/
+chown -R dckakadia:dckakadia /home/dckakadia/business_tools/data/
+chmod -R 775 /home/dckakadia/business_tools/data/
 echo "=============================================="
 
 echo "  Cleaning up old processes..."
@@ -20,8 +20,8 @@ sleep 2
 
 rm -f "$LOGS"/*.pid
 rm -f "$DIR/gunicorn.ctl"
-chown -R dckakadia:dckakadia /home/dckakadia/import-tools-portal/data/
-chmod -R 775 /home/dckakadia/import-tools-portal/data/
+chown -R dckakadia:dckakadia /home/dckakadia/business_tools/data/
+chmod -R 775 /home/dckakadia/business_tools/data/
 echo "  Cleared stale PID files and sockets"
 
 if [ ! -f "$GUNICORN" ]; then
@@ -55,7 +55,7 @@ start_service() {
     fi
 }
 
-start_service "portal"   "portal:app"             8000
+start_service "portal"   "portal:app"             8080
 start_service "gst"      "gst_wrapper:app"        5001
 start_service "boe"      "boe_wrapper:app"        5002
 start_service "landing"  "landing_cost_flask:app" 5003
@@ -63,6 +63,6 @@ start_service "landing"  "landing_cost_flask:app" 5003
 
 echo ""
 echo "  Dashboard  →  http://$(hostname -I | awk '{print $1}'):8080"
-chown -R dckakadia:dckakadia /home/dckakadia/import-tools-portal/data/
-chmod -R 775 /home/dckakadia/import-tools-portal/data/
+chown -R dckakadia:dckakadia /home/dckakadia/business_tools/data/
+chmod -R 775 /home/dckakadia/business_tools/data/
 echo "=============================================="
