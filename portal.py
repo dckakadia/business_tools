@@ -18,22 +18,12 @@ PORTAL_PASSWORD = "Devin@404404"
 TOOLS = [
     {
         'id': 'gst',
-        'name': 'GSTR-2B Reconciliation',
-        'description': 'Automated reconciliation of GSTR-2B Excel against Tally XML data.',
+        'name': 'GST_BOE_Landing Cost',
+        'description': 'Unified access to GST Reconciliation, PI -> BOE Calculations, and Import Landing Cost.',
         'port': 5001, 'path': '/gst/', 'tag': 'IMPORT', 'color_var': 'blue',
     },
-    {
-        'id': 'boe',
-        'name': 'BOE Calculator',
-        'description': 'Proforma Invoice to Bill of Entry calculations and OCR parsing.',
-        'port': 5002, 'path': '/boe/', 'tag': 'IMPORT', 'color_var': 'emerald',
-    },
-    {
-        'id': 'landing',
-        'name': 'Landing Cost Calculator',
-        'description': 'Calculate and allocate actual landing costs for imported goods.',
-        'port': 5003, 'path': '/landing/', 'tag': 'IMPORT', 'color_var': 'violet',
-    },
+    
+    
     {
         'id': 'po',
         'name': 'Purchase Order Tool',
