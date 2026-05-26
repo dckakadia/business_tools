@@ -104,8 +104,13 @@ def index():
 @app.route('/<path:subpath>')
 def redirect_to_nginx(subpath):
     # If the user accessed this app directly (e.g. via port 8080) and asked for a tool path,
-    # redirect them to the Nginx root (port 80) which handles the reverse proxying.
+    # redirect them directly to the specific tool's port so it works even without Nginx.
     host = request.host.split(':')[0]
+    
+    for t in TOOLS:
+        if subpath.strip('/') == t['path'].strip('/'):
+            return redirect(f"http://{host}:{t['port']}/")
+            
     return redirect(f"http://{host}/{subpath}")
 
 
