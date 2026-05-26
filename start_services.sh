@@ -62,7 +62,7 @@ start_service "landing"  "landing_cost_flask:app" 5003
 
 
 echo ""
-echo "  Dashboard  →  http://$(hostname -I | awk '{print $1}'):8080"
+echo "  Dashboard  →  http://$(hostname -I | awk '{print $1}')/"
 chown -R dckakadia:dckakadia /home/dckakadia/business_tools/data/
 chmod -R 775 /home/dckakadia/business_tools/data/
 echo "=============================================="
