@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, render_template_string, request, session, redirect
+from flask import Flask, jsonify, render_template_string, request, session, redirect, Response
+import requests
 from functools import wraps
 import socket
 import os
@@ -101,17 +102,46 @@ def api_status():
 def index():
     return render_template_string(PORTAL_HTML, tools=TOOLS)
 
-@app.route('/<path:subpath>')
-def redirect_to_nginx(subpath):
-    # If the user accessed this app directly (e.g. via port 8080) and asked for a tool path,
-    # redirect them directly to the specific tool's port so it works even without Nginx.
-    host = request.host.split(':')[0]
-    
+@app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+def proxy_to_tool(subpath):
+    target_tool = None
     for t in TOOLS:
-        if subpath.strip('/') == t['path'].strip('/'):
-            return redirect(f"http://{host}:{t['port']}/")
-            
-    return redirect(f"http://{host}/{subpath}")
+        if subpath.strip('/') == t['path'].strip('/') or subpath.startswith(t['path'].strip('/') + '/'):
+            target_tool = t
+            break
+
+    if not target_tool:
+        return "Not Found", 404
+
+    prefix = target_tool['path'].strip('/')
+    if subpath.strip('/') == prefix:
+        backend_path = '/'
+    else:
+        backend_path = '/' + subpath[len(prefix):].lstrip('/')
+
+    target_url = f"http://127.0.0.1:{target_tool['port']}{backend_path}"
+    
+    headers = {k: v for k, v in request.headers if k.lower() != 'host'}
+    headers['X-Script-Name'] = target_tool['path']
+
+    try:
+        resp = requests.request(
+            method=request.method,
+            url=target_url,
+            headers=headers,
+            data=request.get_data(),
+            cookies=request.cookies,
+            allow_redirects=False,
+            stream=True
+        )
+    except Exception as e:
+        return f"Tool offline or error connecting to backend: {e}", 502
+
+    excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+    headers = [(name, value) for (name, value) in resp.raw.headers.items()
+               if name.lower() not in excluded_headers]
+
+    return Response(resp.iter_content(chunk_size=10*1024), resp.status_code, headers)
 
 
 # ── LOGIN PAGE HTML ───────────────────────────────────────────────────────────

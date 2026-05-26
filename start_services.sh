@@ -55,7 +55,7 @@ start_service() {
     fi
 }
 
-start_service "portal"   "portal:app"             8000
+start_service "portal"   "portal:app"             8080
 start_service "gst"      "gst_wrapper:app"        5001
 start_service "boe"      "boe_wrapper:app"        5002
 start_service "landing"  "landing_cost_flask:app" 5003
