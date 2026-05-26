@@ -23,13 +23,7 @@ TOOLS = [
         'port': 5001, 'path': '/suite/', 'tag': 'IMPORT', 'color_var': 'blue',
         'hidden': False
     },
-    {
-        'id': 'po',
-        'name': 'Purchase Order Tool',
-        'description': 'Draft professional POs for China suppliers. Manages supplier details and generates PDFs.',
-        'port': 5005, 'path': '/po/', 'tag': 'ORDERS', 'color_var': 'amber',
-        'hidden': False
-    },
+
     {
         'id': 'spa',
         'name': 'SpaTrack Pro',

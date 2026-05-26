@@ -13,7 +13,7 @@ chmod -R 775 /home/dckakadia/business_tools/data/
 echo "=============================================="
 
 echo "  Cleaning up old processes..."
-for PORT in 8080 8081 8000 5001 5002 5003 5004 5005; do
+for PORT in 8080 8081 8000 5001 5002 5003 5004; do
     fuser -k ${PORT}/tcp 2>/dev/null && echo "  Killed process on port $PORT" || true
 done
 sleep 2
