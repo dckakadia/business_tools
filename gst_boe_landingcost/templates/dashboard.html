@@ -102,19 +102,19 @@
 </div>
 
 <div class="tools-grid">
-  <a href="/gst/" class="tool-card gst">
+  <a href="{{ url_for('gst.index') }}" class="tool-card gst">
     <div class="tool-icon">📊</div>
     <h2 class="tool-title">GSTR-2B Reconciliation</h2>
     <p class="tool-desc">Compare GSTR-2B portal data with Tally accounting entries. Automatically generate matched and mismatched Excel reports.</p>
   </a>
   
-  <a href="/boe/" class="tool-card boe">
+  <a href="{{ url_for('boe.index') }}" class="tool-card boe">
     <div class="tool-icon">📄</div>
     <h2 class="tool-title">PI → BOE Calculator</h2>
     <p class="tool-desc">Calculate import duty and BOE values from Proforma Invoices. Features Gemini AI auto-scanning for instant data entry.</p>
   </a>
   
-  <a href="/landing/" class="tool-card landing">
+  <a href="{{ url_for('landing.index') }}" class="tool-card landing">
     <div class="tool-icon">🏭</div>
     <h2 class="tool-title">Landing Cost Calculator</h2>
     <p class="tool-desc">Calculate the complete item-wise landed cost at your factory including bank charges, shipping, customs duty, and local transport.</p>
