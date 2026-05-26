@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard | Import Tools Suite{% endblock %}
+
+{% block extra_css %}
+<style>
+  .hero {
+    text-align: center;
+    padding: 60px 0 80px;
+  }
+  
+  .hero-title {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px;
+    color: var(--muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+  }
+  
+  .tool-card {
+    display: block;
+    text-decoration: none;
+    color: var(--text);
+    padding: 32px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(30,33,48,0.5) 0%, rgba(24,27,38,0.5) 100%);
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    transition: background 0.3s ease;
+  }
+  
+  .tool-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md), var(--shadow-glow);
+    border-color: rgba(99, 102, 241, 0.3);
+    background: linear-gradient(180deg, rgba(35,39,56,0.8) 0%, rgba(24,27,38,0.8) 100%);
+  }
+  
+  .tool-card.gst:hover::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+  .tool-card.boe:hover::before { background: linear-gradient(90deg, #a855f7, #c084fc); }
+  .tool-card.landing:hover::before { background: linear-gradient(90deg, #10b981, #34d399); }
+  
+  .tool-icon {
+    font-size: 32px;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.05);
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+  }
+  
+  .tool-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  
+  .tool-desc {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+  <div style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: rgba(99,102,241,0.1); border-radius: 100px; color: var(--primary); font-size: 13px; font-weight: 600; margin-bottom: 24px;">
+    <span style="display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 10px var(--primary);"></span>
+    System Online
+  </div>
+  <h1 class="hero-title">Business <span class="text-gradient">Tools</span> Suite</h1>
+  <p class="hero-subtitle">Unified dashboard for GST reconciliation and complete import cost calculations powered by AI.</p>
+</div>
+
+<div class="tools-grid">
+  <a href="/gst/" class="tool-card gst">
+    <div class="tool-icon">📊</div>
+    <h2 class="tool-title">GSTR-2B Reconciliation</h2>
+    <p class="tool-desc">Compare GSTR-2B portal data with Tally accounting entries. Automatically generate matched and mismatched Excel reports.</p>
+  </a>
+  
+  <a href="/boe/" class="tool-card boe">
+    <div class="tool-icon">📄</div>
+    <h2 class="tool-title">PI → BOE Calculator</h2>
+    <p class="tool-desc">Calculate import duty and BOE values from Proforma Invoices. Features Gemini AI auto-scanning for instant data entry.</p>
+  </a>
+  
+  <a href="/landing/" class="tool-card landing">
+    <div class="tool-icon">🏭</div>
+    <h2 class="tool-title">Landing Cost Calculator</h2>
+    <p class="tool-desc">Calculate the complete item-wise landed cost at your factory including bank charges, shipping, customs duty, and local transport.</p>
+  </a>
+</div>
+{% endblock %}

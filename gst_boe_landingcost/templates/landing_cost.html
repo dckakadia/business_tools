@@ -1,0 +1,381 @@
+{% extends "layout.html" %}
+
+{% block title %}Landing Cost Calculator | Import Tools Suite{% endblock %}
+
+{% block extra_css %}
+<style>
+  .tool-header {
+    margin-bottom: 32px;
+  }
+  
+  .tool-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+
+  .ai-card {
+    border-color: rgba(99, 102, 241, 0.3);
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.05) 0%, rgba(18, 20, 29, 0) 100%);
+  }
+
+  .file-drop {
+    border: 2px dashed rgba(99, 102, 241, 0.4);
+    background: rgba(99, 102, 241, 0.05);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+  }
+
+  .file-drop:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.8);
+  }
+
+  .input-accent { color: var(--accent) !important; font-family: var(--font-mono); font-weight: 600; }
+  .input-primary { color: var(--primary) !important; font-family: var(--font-mono); font-weight: 600; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+
+  input[type="file"] { display: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tool-header">
+  <h1>🏭 Landing Cost Calculator</h1>
+  <p class="text-muted">Calculate item-wise landed cost with proportional allocation of bank charges, shipping, duty & transport.</p>
+</div>
+
+<div class="grid-3">
+  <!-- Invoice & Exchange -->
+  <div class="card">
+    <div class="section-title">Invoice & Exchange</div>
+    <div class="form-group">
+      <label class="form-label">Invoice Ref</label>
+      <input type="text" id="invoiceRef" class="form-control" placeholder="PI-2024-001">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date</label>
+      <input type="date" id="invoiceDate" class="form-control">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Currency</label>
+      <select id="currency" class="form-control" onchange="onCurrencyChange()">
+        <option value="USD">USD ($)</option>
+        <option value="RMB">RMB (¥)</option>
+      </select>
+    </div>
+    <div class="form-group" id="row-usd">
+      <label class="form-label">USD → INR Rate</label>
+      <input type="number" id="usdRate" class="form-control input-accent" value="84.00" step="0.01">
+    </div>
+    <div class="form-group" id="row-rmb" style="display:none">
+      <label class="form-label">RMB → INR Rate</label>
+      <input type="number" id="rmbRate" class="form-control input-accent" value="11.50" step="0.01">
+    </div>
+  </div>
+
+  <!-- Additional Costs -->
+  <div class="card">
+    <div class="section-title">Additional Costs (₹)</div>
+    <div class="form-group">
+      <label class="form-label">Bank Charges</label>
+      <input type="number" id="bankCharges" class="form-control input-accent" value="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Shipping Cost</label>
+      <input type="number" id="shipping" class="form-control input-accent" value="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Custom Duty</label>
+      <input type="number" id="customDuty" class="form-control input-accent" value="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Local Transport</label>
+      <input type="number" id="localTrans" class="form-control input-accent" value="0">
+    </div>
+  </div>
+
+  <!-- AI Scanner -->
+  <div class="card ai-card">
+    <div class="section-title" style="color:var(--text)">🤖 AI Auto-Fill</div>
+    <div class="form-group">
+      <label class="form-label">Gemini API Key</label>
+      <input type="password" id="geminiKey" class="form-control" placeholder="AIza...">
+    </div>
+    <div class="file-drop" onclick="document.getElementById('piFile').click()">
+      <div style="font-size:24px; margin-bottom:8px;">📄</div>
+      <div style="font-weight: 600; font-size:14px; margin-bottom:4px; color: var(--text);">Upload PI Document</div>
+      <input type="file" id="piFile" accept=".pdf,.jpg,.jpeg,.png" onchange="document.getElementById('fileLabel').textContent = this.files[0] ? this.files[0].name : 'PDF / JPG / PNG'">
+      <div id="fileLabel" style="font-size:12px; color:var(--muted);">PDF / JPG / PNG</div>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="scanInvoice()">Scan Invoice</button>
+    <div id="scanMsg" style="margin-top:12px; font-size:12px; text-align:center;"></div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card-header" style="padding-bottom: 0; border: none; margin-bottom: 16px;">
+    <h2 class="card-title">📦 Invoice Items</h2>
+    <div style="display:flex; gap:8px;">
+      <button class="btn btn-outline" onclick="addRow()">+ Add Item</button>
+      <button class="btn btn-danger" onclick="clearItems()">Clear</button>
+    </div>
+  </div>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:5%">#</th>
+          <th>Item Description</th>
+          <th style="width:15%">Qty</th>
+          <th style="width:20%" id="thUnitPrice">Unit Price (USD)</th>
+          <th style="width:20%">Value (INR)</th>
+          <th style="width:5%"></th>
+        </tr>
+      </thead>
+      <tbody id="itemsBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom: 24px;">
+  <div class="section-title">📊 Live Summary</div>
+  <div class="stat-grid" style="margin-bottom: 16px;">
+    <div class="stat-box"><div class="stat-label" id="labelInvoiceCur">Invoice (USD)</div><div class="stat-value input-primary" id="s-inv-usd">$0.00</div></div>
+    <div class="stat-box"><div class="stat-label">Invoice (INR)</div><div class="stat-value text-muted" id="s-inv-inr">₹0</div></div>
+    <div class="stat-box"><div class="stat-label">Additional Costs</div><div class="stat-value input-primary" id="s-addl">₹0</div></div>
+    <div class="stat-box"><div class="stat-label">Total Landed</div><div class="stat-value input-accent" id="s-grand">₹0</div></div>
+  </div>
+  <div style="display:flex; gap:12px; justify-content:center;">
+    <button class="btn btn-primary" onclick="calculate()">⚡ Calculate Full Breakdown</button>
+    <button class="btn btn-outline" onclick="openReport()">📄 View Printable Report</button>
+  </div>
+  <div id="statusMsg" style="text-align:center; font-size:13px; margin-top:12px;"></div>
+</div>
+
+<div class="card" id="resultSection" style="display:none; margin-bottom:40px;">
+  <div class="section-title">🏭 Final Landed Cost Breakdown</div>
+  <div class="table-container">
+    <table class="calc-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Item</th><th>Qty</th><th id="thCalcUnitPrice">Unit ($)</th><th>Inv ₹</th><th>Share</th>
+          <th>Total Addl.</th>
+          <th style="color:var(--accent)">Total Landed ₹</th>
+          <th style="color:var(--accent)">Per Unit ₹</th>
+        </tr>
+      </thead>
+      <tbody id="calcBody"></tbody>
+      <tfoot id="calcFoot"></tfoot>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let items = [];
+
+const fmtInr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const fmtCur = (n, cur) => (cur === 'RMB' ? '¥' : '$') + Number(n).toFixed(2);
+const v = id  => parseFloat(document.getElementById(id).value) || 0;
+
+function getCurrency() { return document.getElementById('currency').value; }
+function getRate() { return getCurrency() === 'RMB' ? v('rmbRate') : v('usdRate'); }
+function getInputs() {
+  return {
+    currency: getCurrency(), rate: v('usdRate'), rmbRate: v('rmbRate'),
+    bank: v('bankCharges'), ship: v('shipping'), duty: v('customDuty'), trans: v('localTrans')
+  };
+}
+
+function onCurrencyChange() {
+  const cur = getCurrency();
+  const isUSD = cur === 'USD';
+  document.getElementById('row-usd').style.display = isUSD ? '' : 'none';
+  document.getElementById('row-rmb').style.display = isUSD ? 'none' : '';
+  document.getElementById('labelInvoiceCur').textContent = `Invoice (${cur})`;
+  document.getElementById('thUnitPrice').textContent = `Unit Price (${cur})`;
+  document.getElementById('thCalcUnitPrice').textContent = `Unit (${cur})`;
+  quickUpdate();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('itemsBody');
+  const rate = getRate();
+  const cur = getCurrency();
+  tbody.innerHTML = items.map((it, i) => {
+    const val = it.qty * it.unitPrice * rate;
+    return `<tr>
+      <td class="font-mono text-muted">${i+1}</td>
+      <td><input type="text" class="form-control" value="${it.name}" onchange="items[${i}].name=this.value"></td>
+      <td><input type="number" class="form-control font-mono" value="${it.qty}" onchange="items[${i}].qty=+this.value;quickUpdate()"></td>
+      <td><input type="number" step="0.01" class="form-control font-mono" value="${it.unitPrice}" onchange="items[${i}].unitPrice=+this.value;quickUpdate()"></td>
+      <td class="font-mono text-muted" style="font-weight:600">${fmtInr(val)}</td>
+      <td><button class="btn btn-danger" style="padding:6px" onclick="removeRow(${i})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function addRow() { items.push({name: `Item ${items.length + 1}`, qty: 1, unitPrice: 0}); renderTable(); }
+function removeRow(i) { items.splice(i, 1); renderTable(); quickUpdate(); }
+function clearItems() { items = []; renderTable(); quickUpdate(); document.getElementById('resultSection').style.display='none'; }
+
+function quickUpdate() {
+  const inp = getInputs();
+  const rate = getRate();
+  const cur = getCurrency();
+  const invUsd = items.reduce((s,it) => s + it.qty * it.unitPrice, 0);
+  const invInr = invUsd * rate;
+  const addl = inp.bank + inp.ship + inp.duty + inp.trans;
+  const grand = invInr + addl;
+
+  document.getElementById('s-inv-usd').textContent = fmtCur(invUsd, cur);
+  document.getElementById('s-inv-inr').textContent = fmtInr(invInr);
+  document.getElementById('s-addl').textContent = fmtInr(addl);
+  document.getElementById('s-grand').textContent = fmtInr(grand);
+  renderTable();
+}
+
+['usdRate','rmbRate','bankCharges','shipping','customDuty','localTrans'].forEach(id => {
+  document.getElementById(id).addEventListener('input', quickUpdate);
+});
+
+async function calculate() {
+  if (!items.length) { document.getElementById('statusMsg').innerHTML = '<span style="color:var(--danger)">Add items first</span>'; return; }
+  const inp = getInputs();
+  try {
+    const res = await fetch('/landing/api/calculate', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items, ...inp})});
+    const d = await res.json();
+    renderCalcTable(d);
+    document.getElementById('statusMsg').innerHTML = '<span style="color:var(--success)">✅ Calculated successfully</span>';
+  } catch(e) { document.getElementById('statusMsg').innerHTML = `<span style="color:var(--danger)">Error: ${e.message}</span>`; }
+}
+
+function renderCalcTable(d) {
+  const sec = document.getElementById('resultSection');
+  const body = document.getElementById('calcBody');
+  const foot = document.getElementById('calcFoot');
+  const cur = getCurrency();
+  sec.style.display = '';
+
+  body.innerHTML = d.items.map((it,i) => {
+    return `<tr>
+      <td class="font-mono text-muted">${i+1}</td>
+      <td style="font-weight:600">${it.name||'Item '+(i+1)}</td>
+      <td class="font-mono">${it.qty}</td>
+      <td class="font-mono text-muted">${fmtCur(it.unitPrice, cur)}</td>
+      <td class="font-mono">${fmtInr(it.item_inr)}</td>
+      <td><span class="badge badge-info">${it.share.toFixed(1)}%</span></td>
+      <td class="font-mono text-muted">${fmtInr(it.addl_share)}</td>
+      <td class="font-mono" style="color:var(--accent); font-weight:700">${fmtInr(it.total_item)}</td>
+      <td class="font-mono" style="color:var(--accent); font-weight:700">${fmtInr(it.per_unit)}</td>
+    </tr>`;
+  }).join('');
+
+  foot.innerHTML = `<tr>
+    <td colspan="4" style="font-weight:700">GRAND TOTAL</td>
+    <td class="font-mono text-muted">${fmtInr(d.inv_inr)}</td>
+    <td class="font-mono text-muted">100%</td>
+    <td class="font-mono text-muted">${fmtInr(d.total_addl)}</td>
+    <td colspan="2" class="font-mono" style="color:var(--accent); font-size:18px; font-weight:800">${fmtInr(d.grand)}</td>
+  </tr>`;
+}
+
+async function openReport() {
+  if (!items.length) return;
+  const payload = { items, ...getInputs(), invoiceRef: document.getElementById('invoiceRef').value, invoiceDate: document.getElementById('invoiceDate').value };
+  const res = await fetch('/landing/api/report', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  const html = await res.text();
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+}
+
+async function scanInvoice() {
+  const keyEl = document.getElementById('geminiKey');
+  const fileEl = document.getElementById('piFile');
+  const msgEl = document.getElementById('scanMsg');
+  
+  if (!keyEl.value) { msgEl.innerHTML = '<span style="color:var(--danger)">Need API key</span>'; return; }
+  if (!fileEl.files[0]) { msgEl.innerHTML = '<span style="color:var(--danger)">Need file</span>'; return; }
+
+  msgEl.innerHTML = '🤖 Scanning...';
+  const fd = new FormData();
+  fd.append('api_key', keyEl.value);
+  fd.append('file', fileEl.files[0]);
+
+  try {
+    const res = await fetch('/landing/api/parse-invoice', {method:'POST', body:fd});
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    if (data.invoiceRef) document.getElementById('invoiceRef').value = data.invoiceRef;
+    if (data.invoiceDate) document.getElementById('invoiceDate').value = data.invoiceDate;
+    if (data.currency) { document.getElementById('currency').value = data.currency; onCurrencyChange(); }
+    if (data.items && data.items.length) {
+      items = data.items.map(it => ({ name: it.name||'', qty: Number(it.qty)||1, unitPrice: Number(it.unitPrice)||0 }));
+      renderTable(); quickUpdate();
+      msgEl.innerHTML = `<span style="color:var(--success)">✅ Found ${items.length} items</span>`;
+    }
+  } catch(e) { msgEl.innerHTML = `<span style="color:var(--danger)">Error: ${e.message}</span>`; }
+}
+
+addRow();
+</script>
+{% endblock %}

@@ -1,0 +1,655 @@
+{% extends "layout.html" %}
+
+{% block title %}PI → BOE Calculator | Import Tools Suite{% endblock %}
+
+{% block extra_css %}
+<style>
+  .tool-header { margin-bottom: 32px; }
+  .tool-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+
+  .section-title {
+    font-size: 14px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.05em; color: var(--secondary); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 8px;
+  }
+
+  .ai-card { border-color: rgba(168, 85, 247, 0.3); background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, rgba(18, 20, 29, 0) 100%); }
+  
+  .mini-scan {
+    background: rgba(168, 85, 247, 0.05);
+    border: 1px dashed rgba(168, 85, 247, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .file-drop {
+    border: 2px dashed rgba(168, 85, 247, 0.4); background: rgba(168, 85, 247, 0.05);
+    border-radius: var(--radius-md); padding: 32px; text-align: center; cursor: pointer; transition: all 0.2s ease; margin-bottom: 16px;
+  }
+  .file-drop:hover { background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.8); }
+
+  .scan-btn {
+    width: 100%; background: linear-gradient(135deg, var(--secondary), var(--primary));
+    color: white; font-weight: 700; padding: 12px; border-radius: var(--radius-sm); border: none; cursor: pointer; transition: all 0.2s;
+  }
+  .scan-btn:hover { box-shadow: 0 4px 14px rgba(168, 85, 247, 0.3); transform: translateY(-2px); }
+
+  .input-red { color: #f87171 !important; font-family: var(--font-mono); font-weight: 600; }
+  .input-green { color: #34d399 !important; font-family: var(--font-mono); font-weight: 600; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .stat-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-sm); text-align: center; }
+  .stat-label { font-size: 11px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .stat-value { font-size: 20px; font-weight: 700; font-family: var(--font-mono); }
+
+  .tally-step { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px; margin-bottom: 16px; }
+  .tally-step h3 { font-size: 15px; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  
+  .saved-item { background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
+  .saved-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+  input[type="file"] { display: none; }
+  
+  @media print {
+    @page { size: A4; margin: 10mm; }
+    body { background: white !important; color: black !important; font-size: 11px !important; padding: 0 !important; }
+    .navbar, .ai-card, .file-drop, button, .no-print, .mini-scan, .tool-header p { display: none !important; }
+    
+    .tool-header { margin-bottom: 10px !important; }
+    .tool-header h1 { font-size: 18px !important; margin-bottom: 0 !important; }
+    
+    .card { background: white !important; border: none !important; box-shadow: none !important; margin-bottom: 10px !important; padding: 0 !important; break-inside: avoid; }
+    .grid-2 { display: flex !important; gap: 10px !important; margin-bottom: 10px !important; }
+    .grid-2 > div { flex: 1 !important; }
+    
+    .section-title { color: black !important; border-bottom: 1px solid #000 !important; margin-bottom: 8px !important; padding-bottom: 2px !important; font-size: 12px !important; }
+    
+    .form-group { margin-bottom: 4px !important; }
+    .form-label { font-size: 9px !important; color: #555 !important; margin-bottom: 0 !important; display: block !important; }
+    .form-control { border: none !important; background: transparent !important; color: black !important; padding: 0 !important; font-size: 11px !important; height: auto !important; border-bottom: 1px dotted #ccc !important; border-radius: 0 !important; }
+    
+    table { width: 100% !important; border-collapse: collapse !important; font-size: 10px !important; }
+    th, td { border: 1px solid #999 !important; padding: 4px !important; color: black !important; background: white !important; }
+    th { font-weight: bold !important; text-align: left !important; }
+    
+    .stat-grid { display: flex !important; justify-content: space-between !important; gap: 5px !important; }
+    .stat-box { flex: 1; border: 1px solid #999 !important; padding: 4px !important; background: white !important; }
+    .stat-label { font-size: 8px !important; margin-bottom: 2px !important; }
+    .stat-value { font-size: 11px !important; color: black !important; }
+    
+    .tally-step { padding: 4px !important; border: 1px solid #999 !important; margin-bottom: 4px !important; background: white !important; }
+    .tally-step h3 { font-size: 11px !important; margin-bottom: 2px !important; }
+    .tally-step ul { padding-left: 15px !important; margin: 0 !important; line-height: 1.2 !important; font-size: 10px !important; }
+    
+    /* Make tally steps display as a 2x2 grid to save vertical space */
+    .card:last-of-type { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+    .card:last-of-type .section-title { grid-column: span 2; }
+    
+    .input-red, .input-green { color: black !important; font-weight: bold !important; }
+    * { color: black !important; }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tool-header no-print">
+  <h1>📄 PI → BOE Calculator</h1>
+  <p class="text-muted">Proforma Invoice to Bill of Entry Calculator</p>
+</div>
+
+<!-- Global AI Setup -->
+<div class="card ai-card no-print" style="margin-bottom: 24px;">
+  <div class="section-title">🤖 AI Invoice Scanner (Powered by Gemini)</div>
+  <div style="display: flex; gap: 16px; align-items: flex-end;">
+    <div class="form-group" style="margin: 0; flex: 1;">
+      <label class="form-label">Gemini API Key</label>
+      <input type="password" id="gemini_api_key" class="form-control" placeholder="•••••••••••••••••••••••••••••••••••••••">
+      <div style="font-size:11px; color:var(--muted); margin-top:4px;">Get free key at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--secondary)">aistudio.google.com</a></div>
+    </div>
+    <div class="form-group" style="margin: 0; width: 250px;">
+      <label class="form-label">Gemini Model</label>
+      <select id="gemini_model" class="form-control">
+        <option value="gemini-2.5-flash">gemini-2.5-flash ✅ (recommended)</option>
+        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2 no-print">
+  <!-- Invoice Section -->
+  <div class="card">
+    <div class="section-title">Upload Invoice (PDF / JPG / PNG)</div>
+    
+    <div class="file-drop" onclick="document.getElementById('invoice_file').click()">
+      <div style="font-size:32px; margin-bottom:8px;">📄</div>
+      <div style="font-weight: 600; margin-bottom:4px; color: var(--text);" id="invoice_drag_text">Drag & Drop Invoice Here</div>
+      <div style="font-size:12px; color:var(--muted);" id="invoice_name">or click to browse • PDF, JPG, PNG supported</div>
+      <input type="file" id="invoice_file" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(this, 'invoice_drag_text', 'invoice_name')">
+    </div>
+    
+    <button onclick="scanInvoice()" class="scan-btn">🔍 SCAN & AUTO-FILL INVOICE</button>
+    <div id="scan-status" style="margin-top:16px; font-size:13px; text-align:center;"></div>
+
+    <div class="section-title" style="margin-top:24px;">⚙ Configuration (User Input)</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">Exchange Rate Date</label>
+        <input type="date" id="er_date" class="form-control input-red">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Exchange Rate (USD to INR)</label>
+        <input type="number" step="0.01" id="er_rate" class="form-control input-red" placeholder="87.20">
+      </div>
+    </div>
+  </div>
+
+  <!-- BOE Section -->
+  <div class="card">
+    <div class="section-title">📄 BOE Details (From BOE Document)</div>
+    
+    <div class="mini-scan">
+      <div style="font-size:12px; font-weight:700; color:var(--secondary); margin-bottom:12px;">🤖 SCAN BOE DOCUMENT</div>
+      <div style="display:flex; gap:8px;">
+        <input type="file" id="boe_file" onchange="document.getElementById('boe_name').textContent = this.files[0].name" accept=".pdf,.jpg,.jpeg,.png">
+        <button class="btn btn-outline" style="flex:1; min-width:0; overflow:hidden;" onclick="document.getElementById('boe_file').click()"><span id="boe_name" style="display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">No file chosen</span></button>
+        <button class="btn btn-primary" onclick="scanBOE()" style="flex-shrink:0; white-space:nowrap;">🔍 SCAN BOE</button>
+      </div>
+      <div id="boe_scan_status" style="font-size:11px; margin-top:8px;"></div>
+    </div>
+    
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">BOE Number</label>
+        <input type="text" id="boe_number" class="form-control input-red" placeholder="Enter BOE Number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">BOE Date</label>
+        <input type="date" id="boe_date" class="form-control input-red">
+      </div>
+      <div class="form-group">
+        <label class="form-label">PORT Code</label>
+        <input type="text" id="port_code" class="form-control input-red" placeholder="Enter PORT Code">
+      </div>
+      <div class="form-group">
+        <label class="form-label">BOE Taxable Amount (₹)</label>
+        <input type="number" id="boe_taxable" class="form-control input-red">
+      </div>
+      <div class="form-group" style="grid-column: span 2;">
+        <label class="form-label">BOE GST Amount (₹)</label>
+        <input type="number" id="boe_gst" class="form-control input-red" oninput="calculateChallanDetails()">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card no-print" style="margin-bottom: 24px;">
+  <div class="section-title">💳 ICEGATE CHALLAN DETAILS</div>
+  
+  <div class="mini-scan" style="max-width: 500px; margin-bottom: 24px;">
+    <div style="font-size:12px; font-weight:700; color:var(--secondary); margin-bottom:12px;">🤖 SCAN ICEGATE CHALLAN</div>
+    <div style="display:flex; gap:8px;">
+      <input type="file" id="challan_file" onchange="document.getElementById('challan_name').textContent = this.files[0].name" accept=".pdf,.jpg,.jpeg,.png">
+      <button class="btn btn-outline" style="flex:1; min-width:0; overflow:hidden;" onclick="document.getElementById('challan_file').click()"><span id="challan_name" style="display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">No file chosen</span></button>
+      <button class="btn btn-primary" onclick="scanChallan()" style="flex-shrink:0; white-space:nowrap;">🔍 SCAN CHALLAN</button>
+    </div>
+    <div id="challan_scan_status" style="font-size:11px; margin-top:8px;"></div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="form-group">
+        <label class="form-label">Challan Date:</label>
+        <input type="date" id="challan_date" class="form-control input-red">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Challan Amount:</label>
+        <input type="number" id="challan_amt" class="form-control input-red" placeholder="₹ 0.00" oninput="calculateChallanDetails()">
+      </div>
+    </div>
+    <div style="background: rgba(255,255,255,0.02); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span class="text-muted">IGST Amount:</span>
+        <span class="input-green" id="calc_igst">= BOE GST Amount</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span class="text-muted">Custom Duty:</span>
+        <span class="input-green" id="calc_custom_duty">= Challan Amount - BOE GST Amount</span>
+      </div>
+      <div style="font-size:11px; color:var(--muted); border-top:1px dashed var(--border); padding-top:12px;">
+        Note: IGST Amount = BOE GST Amount | Custom Duty = Challan Amount - BOE GST Amount
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom: 24px;">
+  <div class="card-header" style="padding-bottom: 0; border: none; margin-bottom: 16px;">
+    <h2 class="card-title">📋 Proforma Invoice Items</h2>
+  </div>
+  
+  <div class="table-container">
+    <table id="items-table">
+      <thead>
+        <tr>
+          <th style="width:5%">#</th>
+          <th style="width:30%">Item Name</th>
+          <th style="width:15%">Quantity</th>
+          <th style="width:15%">Unit Price (USD)</th>
+          <th style="width:15%">Total (USD)</th>
+          <th style="width:15%">Total (INR)</th>
+          <th style="width:5%" class="no-print">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="items-body"></tbody>
+    </table>
+  </div>
+  
+  <div class="no-print" style="margin-top: 16px; display:flex; gap:8px;">
+    <button class="btn btn-outline" onclick="addItem()">+ ADD ITEM</button>
+    <button class="btn btn-outline" onclick="clearAllItems()">CLEAR ALL ITEMS</button>
+  </div>
+</div>
+
+<div class="no-print" style="display:flex; justify-content:center; gap:16px; margin-bottom: 24px;">
+  <button class="btn btn-primary" style="padding: 14px 40px; font-size: 16px;" onclick="calculate()">🧮 CALCULATE</button>
+  <button class="btn btn-outline" style="padding: 14px 40px; font-size: 16px;" onclick="resetAll()">🔄 RESET ALL</button>
+</div>
+
+<!-- RESULTS SECTION -->
+<div id="results" style="display: none;">
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="section-title" style="color: var(--success);">📊 CALCULATION SUMMARY</div>
+    <div class="stat-grid" style="grid-template-columns: repeat(6, 1fr);">
+      <div class="stat-box"><div class="stat-label">Total PI (USD)</div><div class="stat-value input-red" id="total-usd">$0.00</div></div>
+      <div class="stat-box"><div class="stat-label">Total PI (INR)</div><div class="stat-value input-red" id="total-inr">₹0.00</div></div>
+      <div class="stat-box"><div class="stat-label">BOE Loading %</div><div class="stat-value input-green" id="boe-pct">0.00%</div></div>
+      <div class="stat-box"><div class="stat-label">Taxable Amount</div><div class="stat-value input-red" id="r-boe-taxable">₹0.00</div></div>
+      <div class="stat-box"><div class="stat-label">GST Amount</div><div class="stat-value input-red" id="r-boe-gst">₹0.00</div></div>
+      <div class="stat-box"><div class="stat-label">Total Payable</div><div class="stat-value input-green" id="total-payable">₹0.00</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="section-title" style="color: var(--success);">📈 ITEM-WISE BREAKDOWN</div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th>Qty</th>
+            <th>Price (USD)</th>
+            <th>Total (USD)</th>
+            <th>Total (INR)</th>
+            <th style="color:var(--success)">After BOE Loading (INR)</th>
+            <th>BOE %</th>
+          </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
+        <tfoot id="results-foot"></tfoot>
+      </table>
+    </div>
+  </div>
+  
+  <div class="no-print" style="display:flex; justify-content:center; gap:16px; margin-bottom: 24px;">
+    <button class="btn btn-outline" onclick="window.print()">🖨️ PRINT CALCULATION</button>
+    <button class="btn btn-primary" onclick="saveCalculation()">💾 SAVE CALCULATION</button>
+  </div>
+
+  <div class="card">
+    <div class="section-title" style="color: var(--accent);">📝 TALLY ENTRY STEPS</div>
+    
+    <div class="tally-step">
+      <h3>Step 1: Purchase Voucher</h3>
+      <ul style="padding-left: 20px; line-height: 1.8; color: var(--muted);">
+        <li>Select Sundry Creditor</li>
+        <li>Select Item → Qty → Blank → Put Value as per CI</li>
+        <li>Select Purchase Ledger</li>
+        <li>GST Taxable Value Details → Override Taxable Value → <strong>YES</strong></li>
+        <li>Taxable Value → <strong style="color:var(--text)">BOE Value</strong></li>
+        <li>Put BOE and Eway Detail on Sub Tab</li>
+      </ul>
+    </div>
+
+    <div class="tally-step">
+      <h3>Step 2: Journal Voucher</h3>
+      <ul style="padding-left: 20px; line-height: 1.8; color: var(--muted);">
+        <li><strong>Alt + J</strong></li>
+        <li>GST → Increase in Tax Liability → Import of Services</li>
+        <li><strong>BY:</strong> Tax on Custom Duty (Assets) → Put BOE GST Amt</li>
+        <li><strong>TO:</strong> Input IGST @ 18%</li>
+        <li>Rate: 18%</li>
+        <li>Taxable Amount</li>
+      </ul>
+    </div>
+
+    <div class="tally-step">
+      <h3>Step 3: Bank Voucher</h3>
+      <ul style="padding-left: 20px; line-height: 1.8; color: var(--muted);">
+        <li>Convert Into Journal</li>
+        <li><strong>BY:</strong> Input IGST @ 18%</li>
+        <li><strong>BY:</strong> Custom Duty (Purchase Head)</li>
+        <li>Select Stock Item Which we want to adjust Custom Duty</li>
+        <li><strong>TO:</strong> ICICI Bank A/c</li>
+      </ul>
+    </div>
+
+    <div class="tally-step">
+      <h3>Step 4: Journal Voucher</h3>
+      <ul style="padding-left: 20px; line-height: 1.8; color: var(--muted);">
+        <li><strong>Alt + J</strong></li>
+        <li>GST → Increase in Input Tax Credit → Import of Goods</li>
+        <li><strong>BY:</strong> Input IGST @ 18%</li>
+        <li>Rate: 18%</li>
+        <li>Taxable Amount</li>
+        <li><strong>TO:</strong> Tax on Custom Duty (Assets)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="card no-print" style="margin-top: 24px;">
+  <div class="section-title">💾 SAVED CALCULATIONS</div>
+  <div id="saved-list">
+    <div style="color:var(--muted); font-size:13px;">No saved calculations yet. Click "SAVE CALCULATION" to save your work.</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let items = [];
+let itemCounter = 0;
+
+function handleFileSelect(input, dragId, nameId) {
+  if (input.files && input.files[0]) {
+    document.getElementById(dragId).textContent = "📄 " + input.files[0].name + " — ready to scan";
+    document.getElementById(nameId).textContent = "Click Scan button below";
+  }
+}
+
+function addItem(name = '', qty = '', price = '') {
+  itemCounter++;
+  const id = itemCounter;
+  items.push({ id, name, qty, price });
+  renderItems();
+}
+
+function updateItem(id, field, value) {
+  const item = items.find(i => i.id === id);
+  if (item) {
+    item[field] = value;
+    renderItems();
+  }
+}
+
+function removeItem(id) {
+  items = items.filter(i => i.id !== id);
+  renderItems();
+}
+
+function clearAllItems() {
+  items = [];
+  renderItems();
+}
+
+function renderItems() {
+  const rate = parseFloat(document.getElementById('er_rate').value) || 0;
+  const tbody = document.getElementById('items-body');
+  
+  tbody.innerHTML = items.map((item, index) => {
+    const qty = parseFloat(item.qty) || 0;
+    const price = parseFloat(item.price) || 0;
+    const totalUSD = qty * price;
+    const totalINR = totalUSD * rate;
+    
+    return `
+      <tr>
+        <td class="font-mono text-muted">${index + 1}</td>
+        <td><input type="text" class="form-control" value="${item.name}" onchange="updateItem(${item.id}, 'name', this.value)"></td>
+        <td><input type="number" class="form-control font-mono" value="${item.qty}" onchange="updateItem(${item.id}, 'qty', this.value)"></td>
+        <td><input type="number" step="0.01" class="form-control font-mono" value="${item.price}" onchange="updateItem(${item.id}, 'price', this.value)"></td>
+        <td class="font-mono text-muted">$${totalUSD.toFixed(2)}</td>
+        <td class="font-mono text-muted">₹${totalINR.toFixed(2)}</td>
+        <td class="no-print"><button class="btn btn-outline" style="color:var(--danger); border-color:transparent;" onclick="removeItem(${item.id})">Remove</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+document.getElementById('er_rate').addEventListener('input', renderItems);
+
+function calculateChallanDetails() {
+  const boeGst = parseFloat(document.getElementById('boe_gst').value) || 0;
+  const challanAmt = parseFloat(document.getElementById('challan_amt').value) || 0;
+  
+  document.getElementById('calc_igst').textContent = '₹ ' + boeGst.toFixed(2);
+  const duty = challanAmt - boeGst;
+  document.getElementById('calc_custom_duty').textContent = '₹ ' + (duty > 0 ? duty.toFixed(2) : '0.00');
+}
+
+function resetAll() {
+  if(!confirm("Are you sure you want to reset everything?")) return;
+  document.querySelectorAll('input').forEach(input => {
+    if(input.type !== 'password') input.value = '';
+  });
+  document.getElementById('results').style.display = 'none';
+  clearAllItems();
+  addItem();
+  calculateChallanDetails();
+}
+
+async function scanInvoice() {
+  const apiKey = document.getElementById('gemini_api_key').value;
+  const fileInput = document.getElementById('invoice_file');
+  const status = document.getElementById('scan-status');
+
+  if (!apiKey) { status.innerHTML = '<span style="color:var(--danger)">Please enter API Key</span>'; return; }
+  if (!fileInput.files[0]) { status.innerHTML = '<span style="color:var(--danger)">Please select a file</span>'; return; }
+
+  status.innerHTML = '🤖 Scanning invoice with Gemini...';
+  const fd = new FormData();
+  fd.append('api_key', apiKey);
+  fd.append('model', document.getElementById('gemini_model').value);
+  fd.append('file', fileInput.files[0]);
+
+  try {
+    const res = await fetch('/boe/scan-invoice', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    if (data.exchange_rate) document.getElementById('er_rate').value = data.exchange_rate;
+    if (data.exchange_rate_date) document.getElementById('er_date').value = data.exchange_rate_date;
+    if (data.boe_number) document.getElementById('boe_number').value = data.boe_number;
+    if (data.boe_date) document.getElementById('boe_date').value = data.boe_date;
+    if (data.port_code) document.getElementById('port_code').value = data.port_code;
+    if (data.boe_taxable_amount) document.getElementById('boe_taxable').value = data.boe_taxable_amount;
+    if (data.boe_gst_amount) document.getElementById('boe_gst').value = data.boe_gst_amount;
+    calculateChallanDetails();
+
+    if (data.items && data.items.length) {
+      items = []; itemCounter = 0;
+      data.items.forEach(it => addItem(it.name, it.qty, it.unit_price_usd));
+    }
+    
+    status.innerHTML = '<span style="color:var(--success)">✅ Invoice scanned successfully!</span>';
+    renderItems();
+  } catch (err) {
+    status.innerHTML = `<span style="color:var(--danger)">❌ Error: ${err.message}</span>`;
+  }
+}
+
+async function scanBOE() {
+  const apiKey = document.getElementById('gemini_api_key').value;
+  const fileInput = document.getElementById('boe_file');
+  const status = document.getElementById('boe_scan_status');
+
+  if (!apiKey) { status.innerHTML = '<span style="color:var(--danger)">Need API Key above</span>'; return; }
+  if (!fileInput.files[0]) { status.innerHTML = '<span style="color:var(--danger)">Select BOE file</span>'; return; }
+
+  status.innerHTML = 'Scanning BOE...';
+  const fd = new FormData();
+  fd.append('api_key', apiKey);
+  fd.append('model', document.getElementById('gemini_model').value);
+  fd.append('file', fileInput.files[0]);
+
+  try {
+    const res = await fetch('/boe/scan-boe', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    if (data.boe_number) document.getElementById('boe_number').value = data.boe_number;
+    if (data.boe_date) document.getElementById('boe_date').value = data.boe_date;
+    if (data.port_code) document.getElementById('port_code').value = data.port_code;
+    if (data.boe_taxable_amount) document.getElementById('boe_taxable').value = data.boe_taxable_amount;
+    if (data.boe_gst_amount) document.getElementById('boe_gst').value = data.boe_gst_amount;
+    
+    calculateChallanDetails();
+    status.innerHTML = '<span style="color:var(--success)">✅ BOE mapped!</span>';
+  } catch (err) {
+    status.innerHTML = `<span style="color:var(--danger)">❌ Error: ${err.message}</span>`;
+  }
+}
+
+async function scanChallan() {
+  const apiKey = document.getElementById('gemini_api_key').value;
+  const fileInput = document.getElementById('challan_file');
+  const status = document.getElementById('challan_scan_status');
+
+  if (!apiKey) { status.innerHTML = '<span style="color:var(--danger)">Need API Key above</span>'; return; }
+  if (!fileInput.files[0]) { status.innerHTML = '<span style="color:var(--danger)">Select Challan file</span>'; return; }
+
+  status.innerHTML = 'Scanning Challan...';
+  const fd = new FormData();
+  fd.append('api_key', apiKey);
+  fd.append('model', document.getElementById('gemini_model').value);
+  fd.append('file', fileInput.files[0]);
+
+  try {
+    const res = await fetch('/boe/scan-challan', { method: 'POST', body: fd });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    if (data.challan_date) document.getElementById('challan_date').value = data.challan_date;
+    if (data.challan_amount) document.getElementById('challan_amt').value = data.challan_amount;
+    
+    calculateChallanDetails();
+    status.innerHTML = '<span style="color:var(--success)">✅ Challan mapped!</span>';
+  } catch (err) {
+    status.innerHTML = `<span style="color:var(--danger)">❌ Error: ${err.message}</span>`;
+  }
+}
+
+function calculate() {
+  const rate = parseFloat(document.getElementById('er_rate').value) || 0;
+  const boeTaxable = parseFloat(document.getElementById('boe_taxable').value) || 0;
+  const boeGst = parseFloat(document.getElementById('boe_gst').value) || 0;
+  const totalPayable = boeTaxable + boeGst;
+  
+  if (!items.length || !rate) return alert("Please add items and exchange rate.");
+
+  let totalUSD = 0, totalINR = 0;
+  items.forEach(it => {
+    const usd = (parseFloat(it.qty)||0) * (parseFloat(it.price)||0);
+    totalUSD += usd;
+    totalINR += usd * rate;
+  });
+
+  document.getElementById('total-usd').textContent = '$' + totalUSD.toFixed(2);
+  document.getElementById('total-inr').textContent = '₹' + totalINR.toFixed(2);
+  document.getElementById('r-boe-taxable').textContent = '₹' + boeTaxable.toFixed(2);
+  document.getElementById('r-boe-gst').textContent = '₹' + boeGst.toFixed(2);
+  document.getElementById('total-payable').textContent = '₹' + totalPayable.toFixed(2);
+  
+  let boePct = 0;
+  if (totalINR > 0 && boeTaxable > 0) boePct = (boeTaxable / totalINR) * 100;
+  document.getElementById('boe-pct').textContent = boePct.toFixed(4) + '%';
+
+  const tbody = document.getElementById('results-body');
+  tbody.innerHTML = items.map((it, idx) => {
+    const qty = parseFloat(it.qty)||0;
+    const price = parseFloat(it.price)||0;
+    const itemUSD = qty * price;
+    const itemINR = itemUSD * rate;
+    const boeLoaded = itemINR * (boePct / 100);
+
+    return `
+      <tr>
+        <td class="font-mono text-muted">${idx+1}</td>
+        <td>${it.name}</td>
+        <td class="font-mono">${qty}</td>
+        <td class="font-mono">$${price.toFixed(2)}</td>
+        <td class="font-mono">$${itemUSD.toFixed(2)}</td>
+        <td class="font-mono">₹${itemINR.toFixed(2)}</td>
+        <td class="font-mono" style="color:var(--success);">₹${boeLoaded.toFixed(2)}</td>
+        <td class="font-mono text-muted">${boePct.toFixed(4)}%</td>
+      </tr>
+    `;
+  }).join('');
+  
+  const tfoot = document.getElementById('results-foot');
+  tfoot.innerHTML = `
+    <tr style="background: rgba(255,255,255,0.05); font-weight:700;">
+      <td colspan="3">TOTALS</td>
+      <td></td>
+      <td class="font-mono">$${totalUSD.toFixed(2)}</td>
+      <td class="font-mono">₹${totalINR.toFixed(2)}</td>
+      <td class="font-mono" style="color:var(--success);">₹${boeTaxable.toFixed(2)}</td>
+      <td class="font-mono text-muted">${boePct.toFixed(4)}%</td>
+    </tr>
+  `;
+  
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+function saveCalculation() {
+  const calcData = {
+    date: new Date().toLocaleString(),
+    boeNo: document.getElementById('boe_number').value || 'Unknown',
+    usdTotal: document.getElementById('total-usd').textContent,
+    inrTotal: document.getElementById('total-inr').textContent,
+    payable: document.getElementById('total-payable').textContent
+  };
+  
+  let saved = JSON.parse(localStorage.getItem('boe_saved_calcs') || '[]');
+  saved.unshift(calcData);
+  if(saved.length > 10) saved.pop();
+  localStorage.setItem('boe_saved_calcs', JSON.stringify(saved));
+  loadSavedCalculations();
+  alert('Calculation saved!');
+}
+
+function loadSavedCalculations() {
+  const saved = JSON.parse(localStorage.getItem('boe_saved_calcs') || '[]');
+  const list = document.getElementById('saved-list');
+  if(saved.length === 0) {
+    list.innerHTML = '<div style="color:var(--muted); font-size:13px;">No saved calculations yet. Click "SAVE CALCULATION" to save your work.</div>';
+    return;
+  }
+  
+  list.innerHTML = saved.map(s => `
+    <div class="saved-item">
+      <div>
+        <div style="font-weight:600; color:var(--text);">BOE: ${s.boeNo}</div>
+        <div style="font-size:11px; color:var(--muted);">${s.date}</div>
+      </div>
+      <div style="text-align:right; font-family:var(--font-mono);">
+        <div style="color:var(--primary); font-size:13px;">${s.usdTotal} → ${s.inrTotal}</div>
+        <div style="color:var(--success); font-weight:700;">Total: ${s.payable}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Init
+addItem();
+loadSavedCalculations();
+</script>
+{% endblock %}

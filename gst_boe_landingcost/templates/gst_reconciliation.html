@@ -1,0 +1,203 @@
+{% extends "layout.html" %}
+
+{% block title %}GSTR-2B Reconciliation | Import Tools Suite{% endblock %}
+
+{% block extra_css %}
+<style>
+  .tool-header {
+    margin-bottom: 32px;
+  }
+  
+  .tool-header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+  }
+
+  .upload-area {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .upload-area:hover, .upload-area.dragover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+  }
+
+  .upload-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    color: var(--muted);
+  }
+
+  .upload-text {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .upload-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  .file-name {
+    margin-top: 12px;
+    font-size: 14px;
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  .feature-list {
+    list-style: none;
+    margin-top: 16px;
+  }
+  
+  .feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  
+  .feature-list li::before {
+    content: '✓';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    font-size: 12px;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tool-header">
+  <h1>📊 GSTR-2B Complete Reconciliation</h1>
+  <p class="text-muted">Upload your GSTR-2B Excel and Tally XML to generate a smart, color-coded reconciliation report.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+  
+  <div class="card">
+    <h2 class="card-title" style="margin-bottom: 24px;">Upload Files</h2>
+    
+    <form method="post" enctype="multipart/form-data" id="reconForm">
+      
+      <div class="upload-area" id="excelArea">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text">Upload GSTR-2B Excel File</div>
+        <div class="upload-sub">Supports .xlsx, .xls</div>
+        <input type="file" name="excel_file" id="excel_file" accept=".xlsx,.xls" required>
+        <div class="file-name" id="excelName"></div>
+      </div>
+      
+      <div class="upload-area" id="xmlArea">
+        <div class="upload-icon">📋</div>
+        <div class="upload-text">Upload Tally XML File</div>
+        <div class="upload-sub">Transactions exported from Tally</div>
+        <input type="file" name="xml_file" id="xml_file" accept=".xml" required>
+        <div class="file-name" id="xmlName"></div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; font-size: 16px;">
+        🚀 Generate Complete Reconciliation Report
+      </button>
+      
+    </form>
+  </div>
+  
+  <div>
+    <div class="card" style="margin-bottom: 24px;">
+      <h2 class="card-title">✨ Smart Features</h2>
+      <ul class="feature-list">
+        <li>Visual color-coded comparison</li>
+        <li>Highlights negative & positive differences</li>
+        <li>Identifies missing transactions automatically</li>
+        <li>Calculates exact tax differences</li>
+        <li>Generates total rows for easy verification</li>
+      </ul>
+    </div>
+    
+    <div class="card">
+      <h2 class="card-title">🎨 Color Guide</h2>
+      <div style="margin-top: 16px; display: grid; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+          <span style="width: 16px; height: 16px; background: #E3F2FD; border-radius: 4px;"></span> Excel Data
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+          <span style="width: 16px; height: 16px; background: #FFF9C4; border-radius: 4px;"></span> XML Data
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+          <span style="width: 16px; height: 16px; background: #95E1D3; border-radius: 4px;"></span> Matched
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+          <span style="width: 16px; height: 16px; background: #FF6B6B; border-radius: 4px;"></span> Mismatched
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px;">
+          <span style="width: 16px; height: 16px; background: #FFC000; border-radius: 4px;"></span> Totals
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  function handleFileInput(inputId, nameId, areaId) {
+    const input = document.getElementById(inputId);
+    const nameDisplay = document.getElementById(nameId);
+    const area = document.getElementById(areaId);
+    
+    input.addEventListener('change', function() {
+      if (this.files && this.files[0]) {
+        nameDisplay.textContent = 'Selected: ' + this.files[0].name;
+        area.style.borderColor = 'var(--primary)';
+        area.style.background = 'rgba(99, 102, 241, 0.05)';
+      }
+    });
+
+    area.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      area.classList.add('dragover');
+    });
+
+    area.addEventListener('dragleave', () => {
+      area.classList.remove('dragover');
+    });
+
+    area.addEventListener('drop', () => {
+      area.classList.remove('dragover');
+    });
+  }
+
+  handleFileInput('excel_file', 'excelName', 'excelArea');
+  handleFileInput('xml_file', 'xmlName', 'xmlArea');
+</script>
+{% endblock %}
