@@ -20,23 +20,8 @@ TOOLS = [
         'id': 'suite',
         'name': 'GST_BOE_Landing Cost',
         'description': 'Unified access to GST Reconciliation, PI -> BOE Calculations, and Import Landing Cost.',
-        'port': 8080, 'path': '/suite/', 'tag': 'IMPORT', 'color_var': 'blue',
+        'port': 5001, 'path': '/suite/', 'tag': 'IMPORT', 'color_var': 'blue',
         'hidden': False
-    },
-    {
-        'id': 'gst',
-        'name': 'GSTR-2B Reconciliation',
-        'port': 5001, 'path': '/gst/', 'hidden': True
-    },
-    {
-        'id': 'boe',
-        'name': 'BOE Calculator',
-        'port': 5002, 'path': '/boe/', 'hidden': True
-    },
-    {
-        'id': 'landing',
-        'name': 'Landing Cost Calculator',
-        'port': 5003, 'path': '/landing/', 'hidden': True
     },
     {
         'id': 'po',
@@ -111,7 +96,7 @@ def logout():
 @app.route('/api/status')
 @login_required
 def api_status():
-    return jsonify({t['id']: check_port(t['port']) for t in TOOLS if not t.get('hidden') and t['id'] != 'suite'})
+    return jsonify({t['id']: check_port(t['port']) for t in TOOLS if not t.get('hidden')})
 
 
 @app.route('/')
@@ -119,11 +104,6 @@ def api_status():
 def index():
     visible_tools = [t for t in TOOLS if not t.get('hidden')]
     return render_template_string(PORTAL_HTML, tools=visible_tools)
-
-@app.route('/suite/')
-@login_required
-def suite_hub():
-    return render_template_string(SUITE_HTML)
 
 
 @app.route('/<path:subpath>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
@@ -214,78 +194,6 @@ LOGIN_HTML = r"""<!DOCTYPE html>
     </div>
     <div class="footer-note">Greenwave Traders Pvt Ltd · Internal Portal</div>
   </div>
-</body>
-</html>"""
-
-
-# ── SUITE HUB HTML ────────────────────────────────────────────────────────────
-
-SUITE_HTML = r"""<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Unified Business Suite</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    :root { 
-      --bg: #0b0e17; --sidebar: #121520; --border: #252a42; --text: #e8ecf5; 
-      --muted: #6b7499; --blue: #4f8ef7; --violet: #a78bfa; --amber: #fbbf24;
-      --font-ui: 'Syne', sans-serif; --font-mono: 'DM Mono', monospace; 
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: var(--font-ui); background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
-    
-    .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-    .sidebar-header { padding: 24px; border-bottom: 1px solid var(--border); }
-    .brand { font-family: var(--font-mono); font-size: 11px; color: var(--amber); letter-spacing: .1em; margin-bottom: 6px; }
-    .sidebar-title { font-size: 20px; font-weight: 800; color: #fff; }
-    
-    .nav { flex: 1; padding: 20px 12px; display: flex; flex-direction: column; gap: 8px; }
-    .nav-btn { background: transparent; border: 1px solid transparent; color: var(--muted); padding: 14px 16px; border-radius: 10px; font-family: var(--font-ui); font-size: 14px; font-weight: 700; text-align: left; cursor: pointer; transition: .2s; display: flex; align-items: center; gap: 12px; }
-    .nav-btn:hover { background: rgba(255,255,255,0.03); color: var(--text); }
-    .nav-btn.active { background: rgba(79, 142, 247, 0.1); border-color: rgba(79, 142, 247, 0.3); color: var(--blue); }
-    
-    .sidebar-footer { padding: 20px; border-top: 1px solid var(--border); }
-    .back-btn { display: block; text-align: center; color: var(--text); text-decoration: none; font-size: 13px; font-weight: 700; background: var(--bg); border: 1px solid var(--border); padding: 12px; border-radius: 8px; transition: .15s; }
-    .back-btn:hover { background: rgba(255,255,255,0.05); }
-
-    .main-content { flex: 1; background: #fff; display: flex; flex-direction: column; }
-    iframe { width: 100%; height: 100%; border: none; flex: 1; background: #fff; }
-  </style>
-</head>
-<body>
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="brand">UNIFIED WORKSPACE</div>
-      <div class="sidebar-title">Business Suite</div>
-    </div>
-    <div class="nav">
-      <button class="nav-btn active" onclick="loadTool('/gst/', this)">
-        <span>📊</span> GSTR-2B Recon
-      </button>
-      <button class="nav-btn" onclick="loadTool('/boe/', this)">
-        <span>📑</span> BOE Calculator
-      </button>
-      <button class="nav-btn" onclick="loadTool('/landing/', this)">
-        <span>🏭</span> Landing Cost
-      </button>
-    </div>
-    <div class="sidebar-footer">
-      <a href="/" class="back-btn">← Back to Portal</a>
-    </div>
-  </div>
-  
-  <div class="main-content">
-    <iframe id="tool-frame" src="/gst/"></iframe>
-  </div>
-
-  <script>
-    function loadTool(url, btn) {
-      document.getElementById('tool-frame').src = url;
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-  </script>
 </body>
 </html>"""
 
