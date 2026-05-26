@@ -137,18 +137,21 @@ function setSession(token, user) { sessionStorage.setItem("spatrack_token", toke
 function clearSession() { sessionStorage.removeItem("spatrack_token"); sessionStorage.removeItem("spatrack_user"); }
 
 async function apiLogin(username, password) {
+  if (import.meta.env.DEV) return { ok: true, token: "mock_token", username: username || "Admin" };
   const r = await fetch("/spa/api/login", { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({username,password}) });
   const j = await r.json();
   if(!j.ok) throw new Error(j.error||"Login failed");
   return j;
 }
 async function apiLoad() {
+  if (import.meta.env.DEV) return { items: [], products: [], purchaseOrders: [] };
   const r = await fetch("/spa/api/data", { headers:{"Authorization":"Bearer "+getToken()} });
   if (r.status===401) throw new Error("401");
   if (!r.ok) throw new Error("HTTP "+r.status);
   return (await r.json()).data;
 }
 async function apiSave(items, products, purchaseOrders=[]) {
+  if (import.meta.env.DEV) return { ok: true, savedAt: new Date().toISOString() };
   const r = await fetch("/spa/api/data", { method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer "+getToken()}, body:JSON.stringify({items,products,purchaseOrders}) });
   const j = await r.json();
   if(!j.ok) throw new Error(j.error||"Save failed");
