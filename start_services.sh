@@ -55,14 +55,14 @@ start_service() {
     fi
 }
 
-start_service "portal"   "portal:app"             8080
+start_service "portal"   "portal:app"             8000
 start_service "gst"      "gst_wrapper:app"        5001
 start_service "boe"      "boe_wrapper:app"        5002
 start_service "landing"  "landing_cost_flask:app" 5003
 
 
 echo ""
-echo "  Dashboard  →  http://$(hostname -I | awk '{print $1}')/"
+echo "  Dashboard  →  http://$(hostname -I | awk '{print $1}'):8080/"
 chown -R dckakadia:dckakadia /home/dckakadia/business_tools/data/
 chmod -R 775 /home/dckakadia/business_tools/data/
 echo "=============================================="
