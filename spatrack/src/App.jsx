@@ -45,14 +45,8 @@ function applySortKey(arr, sortKey, getters) {
 
 // ── SheetJS loader (shared by import & export) ───────────────────────────────
 async function loadSheetJS() {
-  if (window.XLSX) return window.XLSX;
-  return new Promise((res, rej) => {
-    const s = document.createElement("script");
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js";
-    s.onload = () => res(window.XLSX);
-    s.onerror = rej;
-    document.head.appendChild(s);
-  });
+  const XLSX = await import("xlsx");
+  return XLSX;
 }
 
 // ── Shared print utility ─────────────────────────────────────────────────────
