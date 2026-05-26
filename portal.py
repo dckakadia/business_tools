@@ -101,6 +101,13 @@ def api_status():
 def index():
     return render_template_string(PORTAL_HTML, tools=TOOLS)
 
+@app.route('/<path:subpath>')
+def redirect_to_nginx(subpath):
+    # If the user accessed this app directly (e.g. via port 8080) and asked for a tool path,
+    # redirect them to the Nginx root (port 80) which handles the reverse proxying.
+    host = request.host.split(':')[0]
+    return redirect(f"http://{host}/{subpath}")
+
 
 # ── LOGIN PAGE HTML ───────────────────────────────────────────────────────────
 
