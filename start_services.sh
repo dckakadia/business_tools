@@ -35,6 +35,7 @@ start_service() {
     local NAME="$1"
     local MODULE="$2"
     local PORT="$3"
+    local APP_DIR="${4:-$DIR}"
     local PIDFILE="$LOGS/${NAME}.pid"
 
     $GUNICORN \
@@ -44,7 +45,7 @@ start_service() {
         --access-logfile "$LOGS/${NAME}_access.log" \
         --error-logfile  "$LOGS/${NAME}_error.log" \
         --pid            "$PIDFILE" \
-        --chdir          "$DIR" \
+        --chdir          "$APP_DIR" \
         --daemon \
         "$MODULE"
     sleep 1
@@ -76,7 +77,7 @@ start_node_service() {
 }
 
 start_service "portal"   "portal:app"             8080
-start_service "suite"    "gst_boe_landingcost.app:app" 5001
+start_service "suite"    "app:app"                5001 "$DIR/gst_boe_landingcost"
 start_node_service "spa" "server.js" 8081
 
 echo ""
