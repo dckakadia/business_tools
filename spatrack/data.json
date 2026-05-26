@@ -1,0 +1,590 @@
+{
+  "items": [
+    {
+      "id": "idvp3jgy7x4",
+      "name": "Acrylic Sheet 2400x2400x4mm White",
+      "unit": "pcs",
+      "cost": 13278,
+      "category": "Raw Material"
+    },
+    {
+      "id": "idlhtykoo6f",
+      "name": "Air Regulator",
+      "unit": "pcs",
+      "cost": 244,
+      "category": "Fittings"
+    },
+    {
+      "id": "idnj03difup",
+      "name": "CPVC Glue",
+      "unit": "pcs",
+      "cost": 336,
+      "category": "Chemical"
+    },
+    {
+      "id": "idsj0zacw58",
+      "name": "Control Panel- Joyonway",
+      "unit": "pcs",
+      "cost": 45698,
+      "category": "Electrical"
+    },
+    {
+      "id": "idzstblsk91",
+      "name": "ELBOW- 2 Inches",
+      "unit": "pcs",
+      "cost": 70,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idtd6me3ivn",
+      "name": "ELBOW- 1 Inches",
+      "unit": "pcs",
+      "cost": 25,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idq708taerk",
+      "name": "ENDCAP- 1 Inches",
+      "unit": "pcs",
+      "cost": 14,
+      "category": "Plumbing"
+    },
+    {
+      "id": "id31a4lnqdf",
+      "name": "Fiberglass Resin- Shell",
+      "unit": "kg",
+      "cost": 130,
+      "category": "Raw Material"
+    },
+    {
+      "id": "idks8k5x6fy",
+      "name": "Fiberglass Resin- Tray",
+      "unit": "kg",
+      "cost": 130,
+      "category": "Raw Material"
+    },
+    {
+      "id": "id4cu76i4hp",
+      "name": "Filter with Element Refill",
+      "unit": "pcs",
+      "cost": 2192,
+      "category": "Fittings"
+    },
+    {
+      "id": "id99cz1de4b",
+      "name": "Hydro Jet 2 Inches",
+      "unit": "pcs",
+      "cost": 174,
+      "category": "Fittings"
+    },
+    {
+      "id": "iddh1knk6sg",
+      "name": "Hydro Jet 3.25 Inches",
+      "unit": "pcs",
+      "cost": 240,
+      "category": "Fittings"
+    },
+    {
+      "id": "idvrr7luyxp",
+      "name": "Hydro Jet 3.25 Inches-Whirlpool",
+      "unit": "pcs",
+      "cost": 260,
+      "category": "Fittings"
+    },
+    {
+      "id": "id7q7mdysk4",
+      "name": "Insulation Sheet",
+      "unit": "kg",
+      "cost": 82,
+      "category": "Other"
+    },
+    {
+      "id": "id65qrllgra",
+      "name": "LED Light-BIG",
+      "unit": "pcs",
+      "cost": 1836,
+      "category": "Electrical"
+    },
+    {
+      "id": "id83wjn5oc0",
+      "name": "Manifold- 1 Inches",
+      "unit": "pcs",
+      "cost": 153,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idfh20af2rm",
+      "name": "Manifold- 2 Inches-Outer-Outer",
+      "unit": "pcs",
+      "cost": 255,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idh8xkdjh5m",
+      "name": "PS Panel Skirt Set",
+      "unit": "set",
+      "cost": 16165,
+      "category": "Other"
+    },
+    {
+      "id": "idgga0gxd0j",
+      "name": "PVC Braided Pipe",
+      "unit": "mtr",
+      "cost": 38,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idtlnu6drdx",
+      "name": "PVC Pipe-Flexible-1 Inches",
+      "unit": "mtr",
+      "cost": 90,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idd5zng0q6m",
+      "name": "PVC Pipe-Flexible-2 Inches",
+      "unit": "mtr",
+      "cost": 236,
+      "category": "Plumbing"
+    },
+    {
+      "id": "id5016us2wy",
+      "name": "PVC Pipe-Solid-1/2 Inches",
+      "unit": "ft",
+      "cost": 14,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idenz5abenn",
+      "name": "PVC Pipe-Solid-1 Inches",
+      "unit": "ft",
+      "cost": 24,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idud2ybupcg",
+      "name": "PVC Pipe-Solid-2 Inches",
+      "unit": "ft",
+      "cost": 56,
+      "category": "Plumbing"
+    },
+    {
+      "id": "id7194jawkf",
+      "name": "Packaging Materials",
+      "unit": "set",
+      "cost": 500,
+      "category": "Other"
+    },
+    {
+      "id": "idbkyyh5bkp",
+      "name": "Pillow- EVA Headrest",
+      "unit": "pcs",
+      "cost": 515,
+      "category": "Fittings"
+    },
+    {
+      "id": "idu58pyewqy",
+      "name": "StainLess Steel Frame",
+      "unit": "pcs",
+      "cost": 12540,
+      "category": "Metal"
+    },
+    {
+      "id": "idlachas9q4",
+      "name": "Suction 2 Inches",
+      "unit": "pcs",
+      "cost": 255,
+      "category": "Fittings"
+    },
+    {
+      "id": "idzhtjo0df8",
+      "name": "TEE-1 Inches",
+      "unit": "pcs",
+      "cost": 25,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idn5gcflbrx",
+      "name": "TEE-10 mm",
+      "unit": "pcs",
+      "cost": 10,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idll2g2urjd",
+      "name": "Waterpump Motor 3hp 60hz 120v",
+      "unit": "pcs",
+      "cost": 14613,
+      "category": "Electrical"
+    },
+    {
+      "id": "id5w900llqn",
+      "name": "Wood Pallet",
+      "unit": "pcs",
+      "cost": 2000,
+      "category": "Other"
+    },
+    {
+      "id": "idy1wqkmzy0",
+      "name": "TEE-2 Inches",
+      "unit": "pcs",
+      "cost": 83,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idraqfwcll6",
+      "name": "TEE-2X1/2 Inches",
+      "unit": "pcs",
+      "cost": 86,
+      "category": "Plumbing"
+    },
+    {
+      "id": "id4cq8129yz",
+      "name": "TEE-3/4",
+      "unit": "pcs",
+      "cost": 12,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idl2fb28vs2",
+      "name": "SS Hose Clamp-4 Inches",
+      "unit": "pcs",
+      "cost": 59,
+      "category": "Metal"
+    },
+    {
+      "id": "id21up9oi0t",
+      "name": "SS Hose Clamp-20 mm",
+      "unit": "pcs",
+      "cost": 3.25,
+      "category": "Metal"
+    },
+    {
+      "id": "idcouacipwk",
+      "name": "PVC Ply-12mm 7X19 Inches",
+      "unit": "pcs",
+      "cost": 118,
+      "category": "Other"
+    },
+    {
+      "id": "idmu9o7r2rd",
+      "name": "Ozone Device",
+      "unit": "pcs",
+      "cost": 1744,
+      "category": "Electrical"
+    },
+    {
+      "id": "idhbarc4bx6",
+      "name": "Nut & Bolt with Washer 50 mm",
+      "unit": "pcs",
+      "cost": 8,
+      "category": "Metal"
+    },
+    {
+      "id": "id89al2w2om",
+      "name": "Rubber Pad",
+      "unit": "pcs",
+      "cost": 65,
+      "category": "Other"
+    },
+    {
+      "id": "idhwtii1ngz",
+      "name": "Lashing Belt for Pallet",
+      "unit": "pcs",
+      "cost": 262,
+      "category": "Other"
+    },
+    {
+      "id": "idtdesxsqoq",
+      "name": "RB Drain Valve",
+      "unit": "pcs",
+      "cost": 245,
+      "category": "Fittings"
+    },
+    {
+      "id": "idss07nxld6",
+      "name": "PVC Ply - 38 mm + 18 mm for Skirt Set",
+      "unit": "set",
+      "cost": 4640,
+      "category": "Other"
+    },
+    {
+      "id": "ides1vrijnw",
+      "name": "PVC Pipe-Flexible-10mm for Airjet",
+      "unit": "mtr",
+      "cost": 24,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idrx1mqe03p",
+      "name": "Black Screws",
+      "unit": "pcs",
+      "cost": 1,
+      "category": "Metal"
+    },
+    {
+      "id": "id5zopt40g5",
+      "name": "Silicon-Alstone STIX A2A ALL 280ml",
+      "unit": "pcs",
+      "cost": 395,
+      "category": "Other"
+    },
+    {
+      "id": "idsp119htoj",
+      "name": "Silicon-Dowsil NP Clear",
+      "unit": "pcs",
+      "cost": 176,
+      "category": "Other"
+    },
+    {
+      "id": "idlwudgcz9x",
+      "name": "PU Form Spray-500gm",
+      "unit": "pcs",
+      "cost": 750,
+      "category": "Other"
+    },
+    {
+      "id": "idev0fe4qqz",
+      "name": "Manifold- 2 Inches-Inner-Outer",
+      "unit": "pcs",
+      "cost": 255,
+      "category": "Plumbing"
+    },
+    {
+      "id": "id5btxodm5c",
+      "name": "Manifold- 2 Inches-Outer-End",
+      "unit": "pcs",
+      "cost": 255,
+      "category": "Plumbing"
+    },
+    {
+      "id": "idolxmrsrk6",
+      "name": "ENDCAP-1 Inches Extension-10mm",
+      "unit": "pcs",
+      "cost": 15,
+      "category": "Plumbing"
+    }
+  ],
+  "products": [
+    {
+      "id": "id4m4xzfayw",
+      "name": "Aristo",
+      "category": "Spa",
+      "factoryCost": 40000,
+      "overheadCost": 0,
+      "shippingCost": 0,
+      "profitMargin": 0,
+      "materials": [
+        {
+          "itemId": "idvp3jgy7x4",
+          "qty": 1
+        },
+        {
+          "itemId": "idlhtykoo6f",
+          "qty": 4
+        },
+        {
+          "itemId": "idrx1mqe03p",
+          "qty": 64
+        },
+        {
+          "itemId": "idsj0zacw58",
+          "qty": 1
+        },
+        {
+          "itemId": "idnj03difup",
+          "qty": 4
+        },
+        {
+          "itemId": "idtd6me3ivn",
+          "qty": 9
+        },
+        {
+          "itemId": "idzstblsk91",
+          "qty": 13
+        },
+        {
+          "itemId": "idq708taerk",
+          "qty": 1
+        },
+        {
+          "itemId": "id31a4lnqdf",
+          "qty": 94
+        },
+        {
+          "itemId": "idks8k5x6fy",
+          "qty": 30
+        },
+        {
+          "itemId": "id4cu76i4hp",
+          "qty": 1
+        },
+        {
+          "itemId": "id99cz1de4b",
+          "qty": 27
+        },
+        {
+          "itemId": "iddh1knk6sg",
+          "qty": 17
+        },
+        {
+          "itemId": "idvrr7luyxp",
+          "qty": 8
+        },
+        {
+          "itemId": "id7q7mdysk4",
+          "qty": 12
+        },
+        {
+          "itemId": "idhwtii1ngz",
+          "qty": 2
+        },
+        {
+          "itemId": "id65qrllgra",
+          "qty": 1
+        },
+        {
+          "itemId": "id83wjn5oc0",
+          "qty": 5
+        },
+        {
+          "itemId": "idfh20af2rm",
+          "qty": 2
+        },
+        {
+          "itemId": "idhbarc4bx6",
+          "qty": 8
+        },
+        {
+          "itemId": "idmu9o7r2rd",
+          "qty": 1
+        },
+        {
+          "itemId": "id7194jawkf",
+          "qty": 2
+        },
+        {
+          "itemId": "idbkyyh5bkp",
+          "qty": 3
+        },
+        {
+          "itemId": "idh8xkdjh5m",
+          "qty": 1
+        },
+        {
+          "itemId": "idlwudgcz9x",
+          "qty": 1
+        },
+        {
+          "itemId": "idgga0gxd0j",
+          "qty": 40
+        },
+        {
+          "itemId": "idtlnu6drdx",
+          "qty": 1
+        },
+        {
+          "itemId": "ides1vrijnw",
+          "qty": 36
+        },
+        {
+          "itemId": "idd5zng0q6m",
+          "qty": 4
+        },
+        {
+          "itemId": "idenz5abenn",
+          "qty": 3
+        },
+        {
+          "itemId": "id5016us2wy",
+          "qty": 1
+        },
+        {
+          "itemId": "idud2ybupcg",
+          "qty": 56
+        },
+        {
+          "itemId": "idss07nxld6",
+          "qty": 1
+        },
+        {
+          "itemId": "idcouacipwk",
+          "qty": 1
+        },
+        {
+          "itemId": "idtdesxsqoq",
+          "qty": 1
+        },
+        {
+          "itemId": "id89al2w2om",
+          "qty": 2
+        },
+        {
+          "itemId": "id5zopt40g5",
+          "qty": 1.5
+        },
+        {
+          "itemId": "idsp119htoj",
+          "qty": 1
+        },
+        {
+          "itemId": "id21up9oi0t",
+          "qty": 27
+        },
+        {
+          "itemId": "idl2fb28vs2",
+          "qty": 4
+        },
+        {
+          "itemId": "idu58pyewqy",
+          "qty": 1
+        },
+        {
+          "itemId": "idlachas9q4",
+          "qty": 3
+        },
+        {
+          "itemId": "idzhtjo0df8",
+          "qty": 1
+        },
+        {
+          "itemId": "idn5gcflbrx",
+          "qty": 1
+        },
+        {
+          "itemId": "idy1wqkmzy0",
+          "qty": 3
+        },
+        {
+          "itemId": "idraqfwcll6",
+          "qty": 1
+        },
+        {
+          "itemId": "id4cq8129yz",
+          "qty": 1
+        },
+        {
+          "itemId": "idll2g2urjd",
+          "qty": 2
+        },
+        {
+          "itemId": "id5w900llqn",
+          "qty": 1
+        },
+        {
+          "itemId": "idev0fe4qqz",
+          "qty": 5
+        },
+        {
+          "itemId": "id5btxodm5c",
+          "qty": 2
+        },
+        {
+          "itemId": "idolxmrsrk6",
+          "qty": 4
+        }
+      ]
+    }
+  ],
+  "purchaseOrders": []
+}

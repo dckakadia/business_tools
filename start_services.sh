@@ -55,9 +55,29 @@ start_service() {
     fi
 }
 
+start_node_service() {
+    local NAME="$1"
+    local SCRIPT="$2"
+    local PORT="$3"
+    local PIDFILE="$LOGS/${NAME}.pid"
+
+    cd "$DIR/spatrack"
+    nohup node "$SCRIPT" > "$LOGS/${NAME}_out.log" 2> "$LOGS/${NAME}_error.log" &
+    local PID=$!
+    echo $PID > "$PIDFILE"
+    sleep 1
+    cd "$DIR"
+    
+    if kill -0 "$PID" 2>/dev/null; then
+        echo "  [$NAME]  started on port $PORT  (PID $PID)"
+    else
+        echo "  [$NAME]  FAILED — check $LOGS/${NAME}_error.log"
+    fi
+}
+
 start_service "portal"   "portal:app"             8080
 start_service "suite"    "gst_boe_landingcost.app:app" 5001
-
+start_node_service "spa" "server.js" 8081
 
 echo ""
 echo "  Dashboard  →  http://$(hostname -I | awk '{print $1}'):8080/"
