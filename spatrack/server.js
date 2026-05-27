@@ -68,6 +68,17 @@ const server = http.createServer(async (req, res) => {
         } catch(e) { res.writeHead(400); res.end(JSON.stringify({ok:false,error:e.message})); }
         return;
       }
+      if (req.method==="POST" && url==="/api/login") {
+        try {
+          const payload = await readBody(req);
+          if (payload.username === "dckakadia" && payload.password === "Devin@404404") {
+            res.writeHead(200); res.end(JSON.stringify({ok:true, token:"spatrack_token", username:payload.username}));
+          } else {
+            res.writeHead(401); res.end(JSON.stringify({ok:false, error:"Invalid username or password"}));
+          }
+        } catch(e) { res.writeHead(400); res.end(JSON.stringify({ok:false,error:e.message})); }
+        return;
+      }
       res.writeHead(404); res.end(JSON.stringify({ok:false,error:"Not found"}));
       return;
   }
